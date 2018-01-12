@@ -39,7 +39,7 @@ def main():
     # UN-comment tests as you work the problems.
     ####################################################################
 
-    run_test_init()
+#     run_test_init()
 #     run_test_append_string()
 #     run_test_double()
 #     run_test_shrink()
@@ -104,8 +104,11 @@ class Box(object):
         # --------------------------------------------------------------
         self.contents = contents
         self.volume = volume
+        self.old_array = []
         if len(self.contents) > self.volume:
             self.contents = ""
+        self.saved_contents = self.contents
+        self.saved_volume = self.volume
 
     def append_string(self, additional_contents):
         """
@@ -139,7 +142,7 @@ class Box(object):
           :type additional_contents: str
         """
         # --------------------------------------------------------------
-        # TODO: 3. Implement and test this function.
+        # DONE: 3. Implement and test this function.
         #     See the testing code (below) for more examples.
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -160,6 +163,26 @@ class Box(object):
         #       Read_this_ONLY_when_asked_Part_2.txt
         #    and continue working on the problem.
         # --------------------------------------------------------------
+        # return_str = ""
+        # new_contents = ""
+        # combined = self.contents + additional_contents
+        # for k in range((len(self.contents)) + len(additional_contents)):
+        #     if k < self.volume:
+        #         new_contents = combined[k]
+        #     else:
+        #         return_str = return_str + additional_contents[k]
+        #
+        # self.contents = new_contents
+        # return return_str
+        extra = ""
+        spaces = self.volume - len(self.contents)
+        for k in range(len(additional_contents)):
+            if k < spaces:
+                self.contents += additional_contents[k]
+            else:
+                extra += additional_contents[k]
+
+        return extra
 
     def double(self):
         """
@@ -195,7 +218,7 @@ class Box(object):
           #                       contents that did NOT fit]
         """
         # --------------------------------------------------------------
-        # TODO: 4. Implement and test this function.
+        # DONE: 4. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -207,7 +230,7 @@ class Box(object):
         # FOR FULL CREDIT, YOUR SOLUTION MUST BE NO MORE THAN
         #    ** TWO **   LINES OF CODE.
         ################################################################
-
+        return self.append_string(self.contents)
 
     def shrink(self, new_volume):
         """
@@ -244,10 +267,7 @@ class Box(object):
         Type hints:
           :type new_volume: int
         """
-        # --------------------------------------------------------------
-        # TODO: 5. Implement and test this function.
-        #     The testing code is already written for you (above).
-        # --------------------------------------------------------------
+
         # --------------------------------------------------------------
         # DIFFICULTY AND TIME RATINGS (see top of this file for explanation)
         #    DIFFICULTY:      8
@@ -255,7 +275,22 @@ class Box(object):
         #
         # IMPORTANT: Write a solution to this problem in pseudo-code,
         # and THEN translate the pseudo-code to a solution.
-        # --------------------------------------------------------------
+        # -------------------------------------------------------------
+        self.volume = new_volume
+        # new_str = ""
+        # extra_str = ""
+        # for k in range(len(self.contents)):
+        #     print(k, self.contents)
+        #     if k < new_volume:
+        #         new_str = new_str + self.contents[k]  # append the character to the new string
+        #     elif k < len(self.contents):
+        #         extra_str = extra_str + self.contents[k]
+        # self.contents = new_str
+        # return extra_str
+
+        orig_contents = self.contents
+        self.contents = ""
+        return self.append_string(orig_contents)
 
     def double_then_shrink(self, new_volume):
         """
@@ -301,7 +336,7 @@ class Box(object):
           :type new_volume: int
         """
         # --------------------------------------------------------------
-        # TODO: 6. Implement and test this function.
+        # DONE: 6. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -309,6 +344,9 @@ class Box(object):
         #    DIFFICULTY:      5
         #    TIME ESTIMATE:   5 minutes.
         # --------------------------------------------------------------
+        double_return_value = self.double()
+        shrink_return_value = self.shrink(new_volume)
+        return len(double_return_value + shrink_return_value)
 
     def reset(self):
         """
@@ -320,7 +358,7 @@ class Box(object):
           when this Box was constructed.
         """
         # --------------------------------------------------------------
-        # TODO: 7. Implement and test this function.
+        # DONE: 7. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -328,6 +366,9 @@ class Box(object):
         #    DIFFICULTY:      4
         #    TIME ESTIMATE:   5 minutes.
         # --------------------------------------------------------------
+        self.old_array = self.old_array + [self.contents]
+        self.contents = self.saved_contents
+        self.volume = self.saved_volume
 
     def steal(self, other_box):
         """
@@ -336,7 +377,7 @@ class Box(object):
           -- Another Box
         What goes out: Nothing (i.e., None).
         Side effects:
-          -- 1. Sets this Box's contents to what is was, but with the
+          -- 1. Sets this Box's contents to what they currently are, but with the
                   other Box's contents appended to this Box's contents
                   (but clipped as needed to fit within this Box)
              2. Sets the other Box's contents to whatever this Box
@@ -348,7 +389,7 @@ class Box(object):
           :type other_box: Box
         """
         # --------------------------------------------------------------
-        # TODO: 8. Implement and test this function.
+        # DONE: 8. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -360,6 +401,7 @@ class Box(object):
         # FOR FULL CREDIT, YOUR SOLUTION MUST BE NO MORE THAN
         #    ** TWO **   LINES OF CODE.
         ################################################################
+        other_box.contents = self.append_string(other_box.contents)
 
     def get_history(self):
         """
@@ -391,7 +433,7 @@ class Box(object):
           #   h is now ['GoodGo', 'GoodBye']
         """
         # --------------------------------------------------------------
-        # TODO: 9. Implement and test this function.
+        # DONE: 9. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -399,6 +441,7 @@ class Box(object):
         #    DIFFICULTY:      6
         #    TIME ESTIMATE:   5 minutes.
         # --------------------------------------------------------------
+        return self.old_array
 
     def combined_box(self, other_box):
         """
@@ -417,7 +460,7 @@ class Box(object):
           :type other_box: Box
         """
         # --------------------------------------------------------------
-        # TODO: 10. Implement and test this function.
+        # DONE: 10. Implement and test this function.
         #     The testing code is already written for you (above).
         # --------------------------------------------------------------
         # --------------------------------------------------------------
@@ -425,7 +468,9 @@ class Box(object):
         #    DIFFICULTY:      4
         #    TIME ESTIMATE:   5 minutes.
         # --------------------------------------------------------------
-
+        new_contents = self.contents + other_box.contents
+        new_volume = self.volume + other_box.volume
+        return Box(new_contents, new_volume)
 
 ########################################################################
 # The TEST functions for the  Box  class begin here.
